@@ -25,8 +25,7 @@
 //
 
 #import "TestDataSource.h"
-#import "CSIconViewItem.h"
-#import "CSIconView.h"
+#import <CSIconView/CSIconView.h>
 
 @implementation TestDataSource
 

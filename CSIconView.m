@@ -1644,6 +1644,18 @@ static NSString * const kFont = @"kFont";
 
 #pragma mark Field editor delegate methods
 
+- (BOOL)textView:(NSTextView *)editor doCommandBySelector:(SEL)selector
+{
+  // This will cause the field editor to lose the focus if we hit Escape
+  if (selector == @selector(cancelOperation:)) {
+    didEdit = NO;
+    [[self window] makeFirstResponder:self];
+    return YES;
+  }
+  
+  return NO;
+}
+
 - (void)textDidChange:(NSNotification *)notification
 {
   NSTextView *fieldEditor = (NSTextView *)[notification object];
