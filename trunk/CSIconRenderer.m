@@ -408,14 +408,14 @@
       unichar ch = [[textStorage string] characterAtIndex:characterIndex];
       
       if (ch == ' ') {
-	unsigned rectCount;
+	unsigned rectCount = 0;
 	NSRectArray rectArray
 	  = [layoutManager rectArrayForGlyphRange:
 	    NSMakeRange (glyphRange.location + glyphRange.length - 1, 1)
 			 withinSelectedGlyphRange:NSMakeRange (NSNotFound, 0)
 				  inTextContainer:textContainer
 					rectCount:&rectCount];
-	float width;
+	float width = 0.0;
 	
 	while (rectCount--) {
 	  width += NSWidth (rectArray[rectCount]);
