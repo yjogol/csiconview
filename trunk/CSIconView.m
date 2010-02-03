@@ -33,6 +33,7 @@
 #import <unistd.h>
 
 #define FADE_DISTANCE   128
+#define UNUSED(x)       ((void)(x))
 
 static NSDictionary *blackTextAttributes;
 static NSDictionary *transparentTextAttributes;
@@ -380,6 +381,8 @@ static NSString * const kFont = @"kFont";
 
 - (void)viewWillMoveToWindow:(NSWindow *)aWindow
 {
+  UNUSED (aWindow);
+  
   NSWindow *oldWindow = [self window];
   
   if (oldWindow) {
@@ -412,11 +415,15 @@ static NSString * const kFont = @"kFont";
 
 - (void)keyWindowChanged:(NSNotification *)aNotification
 {
+  UNUSED (aNotification);
+  
   [self setNeedsDisplay:YES];
 }
 
 - (void)systemColorsChanged:(NSNotification *)aNotification
 {
+  UNUSED (aNotification);
+  
   [self setNeedsDisplay:YES];
 }
 
@@ -442,6 +449,8 @@ static NSString * const kFont = @"kFont";
 
 - (void)resizeWithOldSuperviewSize:(NSSize)oldSize
 {
+  UNUSED (oldSize);
+  
   [self updateSize];
 }
 
@@ -1531,6 +1540,8 @@ static NSString * const kFont = @"kFont";
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
+  UNUSED (theEvent);
+  
   if (dragging) {
     NSSet *intersect = [selectedItems setByIntersectingWithSet:dragSelectedItems];
     NSSet *newItems = [dragSelectedItems setBySubtractingSet:selectedItems];
@@ -1646,6 +1657,8 @@ static NSString * const kFont = @"kFont";
 
 - (BOOL)textView:(NSTextView *)editor doCommandBySelector:(SEL)selector
 {
+  UNUSED (editor);
+  
   // This will cause the field editor to lose the focus if we hit Escape
   if (selector == @selector(cancelOperation:)) {
     didEdit = NO;
@@ -1708,6 +1721,8 @@ static NSString * const kFont = @"kFont";
 
 - (BOOL)textShouldBeginEditing:(NSText *)textObject
 {
+  UNUSED (textObject);
+  
   if ([delegate respondsToSelector:@selector(iconView:shouldBeginEditingItem:)])
     return [delegate iconView:self shouldBeginEditingItem:editingItem];
   
@@ -1732,6 +1747,8 @@ static NSString * const kFont = @"kFont";
 
 - (BOOL)textShouldEndEditing:(NSText *)textObject
 {
+  UNUSED (textObject);
+  
   if ([delegate respondsToSelector:@selector(iconView:shouldEndEditingItem:)])
     return [delegate iconView:self shouldEndEditingItem:editingItem];
   
@@ -1891,6 +1908,8 @@ static NSString * const kFont = @"kFont";
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
+  UNUSED (sender);
+  
   if (isDraggingBackToSelf)
     isDraggingBackToSelf = NO;
 }
@@ -2400,19 +2419,19 @@ findItemAtEdge (id collection, RelativePosition pos)
       switch (pos) {
       case kTopmost:
         isBest = (itemPos.y < bestPos.y 
-                  || itemPos.y == bestPos.y && itemPos.x < bestPos.x);
+                  || (itemPos.y == bestPos.y && itemPos.x < bestPos.x));
         break;
       case kBottommost:
         isBest = (itemPos.y > bestPos.y
-                  || itemPos.y == bestPos.y && itemPos.x > bestPos.x);
+                  || (itemPos.y == bestPos.y && itemPos.x > bestPos.x));
         break;
       case kLeftmost:
         isBest = (itemPos.x < bestPos.x
-                  || itemPos.x == bestPos.x && itemPos.y < bestPos.y);
+                  || (itemPos.x == bestPos.x && itemPos.y < bestPos.y));
         break;
       case kRightmost:
         isBest = (itemPos.x > bestPos.x
-                  || itemPos.x == bestPos.x && itemPos.y > bestPos.y);
+                  || (itemPos.x == bestPos.x && itemPos.y > bestPos.y));
         break;
       }
       
@@ -2432,8 +2451,7 @@ typedef enum {
 } Direction;
 
 static CSIconViewItem *
-findItemInDirectionFromRect (CSIconView *self,
-                             CSRectQuadTree *quadTree,
+findItemInDirectionFromRect (CSRectQuadTree *quadTree,
                              NSRect rect,
                              Direction direction)
 {
@@ -2552,7 +2570,7 @@ findItemInDirectionFromRect (CSIconView *self,
         keyboardMovementDirection = CSVerticalKeyboardMovement;
       }
       
-      nextItem = findItemInDirectionFromRect (self, quadTree, rect, kDown);
+      nextItem = findItemInDirectionFromRect (quadTree, rect, kDown);
     }
   } else {
     nextItem = findItemAtEdge (items, kTopmost);
@@ -2580,6 +2598,8 @@ findItemInDirectionFromRect (CSIconView *self,
 
 - (void)moveDownAndModifySelection:(id)sender
 {
+  UNUSED (sender);
+  
   NSSet *selected = [self selectedItems];
   unsigned count = [selected count];
   CSIconViewItem *nextItem;
@@ -2605,7 +2625,7 @@ findItemInDirectionFromRect (CSIconView *self,
       keyboardMovementDirection = CSVerticalKeyboardMovement;
     }
     
-    nextItem = findItemInDirectionFromRect (self, quadTree, rect, kDown);
+    nextItem = findItemInDirectionFromRect (quadTree, rect, kDown);
   } else {
     nextItem = findItemAtEdge (items, kTopmost);
   }
@@ -2655,7 +2675,7 @@ findItemInDirectionFromRect (CSIconView *self,
         keyboardMovementDirection = CSVerticalKeyboardMovement;
       }
       
-      nextItem = findItemInDirectionFromRect (self, quadTree, rect, kUp);     
+      nextItem = findItemInDirectionFromRect (quadTree, rect, kUp);     
     }
   } else {
     nextItem = findItemAtEdge (items, kBottommost);
@@ -2683,6 +2703,8 @@ findItemInDirectionFromRect (CSIconView *self,
 
 - (void)moveUpAndModifySelection:(id)sender
 {
+  UNUSED (sender);
+  
   NSSet *selected = [self selectedItems];
   unsigned count = [selected count];
   CSIconViewItem *nextItem;
@@ -2708,7 +2730,7 @@ findItemInDirectionFromRect (CSIconView *self,
       keyboardMovementDirection = CSVerticalKeyboardMovement;
     }
     
-    nextItem = findItemInDirectionFromRect (self, quadTree, rect, kUp);
+    nextItem = findItemInDirectionFromRect (quadTree, rect, kUp);
   } else {
     nextItem = findItemAtEdge (items, kBottommost);
   }
@@ -2758,7 +2780,7 @@ findItemInDirectionFromRect (CSIconView *self,
         keyboardMovementDirection = CSHorizontalKeyboardMovement;
       }
       
-      nextItem = findItemInDirectionFromRect (self, quadTree, rect, kLeft);      
+      nextItem = findItemInDirectionFromRect (quadTree, rect, kLeft);      
     }
   } else {
     nextItem = findItemAtEdge (items, kRightmost);
@@ -2786,6 +2808,8 @@ findItemInDirectionFromRect (CSIconView *self,
 
 - (void)moveLeftAndModifySelection:(id)sender
 {
+  UNUSED (sender);
+  
   NSSet *selected = [self selectedItems];
   unsigned count = [selected count];
   CSIconViewItem *nextItem;
@@ -2811,7 +2835,7 @@ findItemInDirectionFromRect (CSIconView *self,
       keyboardMovementDirection = CSHorizontalKeyboardMovement;
     }
     
-    nextItem = findItemInDirectionFromRect (self, quadTree, rect, kLeft);
+    nextItem = findItemInDirectionFromRect (quadTree, rect, kLeft);
   } else {
     nextItem = findItemAtEdge (items, kRightmost);
   }
@@ -2861,7 +2885,7 @@ findItemInDirectionFromRect (CSIconView *self,
         keyboardMovementDirection = CSHorizontalKeyboardMovement;
       }
       
-      nextItem = findItemInDirectionFromRect (self, quadTree, rect, kRight);      
+      nextItem = findItemInDirectionFromRect (quadTree, rect, kRight);      
     }
   } else {
     nextItem = findItemAtEdge (items, kLeftmost);
@@ -2889,6 +2913,8 @@ findItemInDirectionFromRect (CSIconView *self,
 
 - (void)moveRightAndModifySelection:(id)sender
 {
+  UNUSED (sender);
+  
   NSSet *selected = [self selectedItems];
   unsigned count = [selected count];
   CSIconViewItem *nextItem;
@@ -2914,7 +2940,7 @@ findItemInDirectionFromRect (CSIconView *self,
       keyboardMovementDirection = CSHorizontalKeyboardMovement;
     }
     
-    nextItem = findItemInDirectionFromRect (self, quadTree, rect, kRight);
+    nextItem = findItemInDirectionFromRect (quadTree, rect, kRight);
   } else {
     nextItem = findItemAtEdge (items, kLeftmost);
   }
@@ -2940,11 +2966,15 @@ findItemInDirectionFromRect (CSIconView *self,
 
 - (void)scrollToTop:(id)sender
 {
+  UNUSED (sender);
+  
   [self scrollPoint:NSZeroPoint];
 }
 
 - (void)scrollToBottom:(id)sender
 {
+  UNUSED (sender);
+  
   NSRect bounds = [self bounds];
   [self scrollRectToVisible:NSMakeRect (NSMaxX (bounds) - 1,
                                         NSMaxY (bounds) - 1,

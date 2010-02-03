@@ -514,8 +514,8 @@
       [backgroundPath fill];
     } else {
       CSShadingColor colors[] = {
-	0.0, labelColor,
-	1.0, labelShadeColor
+        { 0.0, labelColor },
+	{ 1.0, labelShadeColor }
       };
       CSShadingColorArray colorArray = { 2, colors };
       NSRect bounds = [backgroundPath bounds];
