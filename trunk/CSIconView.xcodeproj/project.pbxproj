@@ -37,6 +37,7 @@
 		D369B1341117A3F30045BD76 /* CSIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = D3E7BFDE08CA58CB0096F2A0 /* CSIcon.m */; };
 		D369B1381117A4300045BD76 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		D369B13B1117A4580045BD76 /* CSIconView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D369B1181117A3C30045BD76 /* CSIconView.framework */; };
+		D39153AD1119949E00DFE068 /* TestTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = D39153AC1119949E00DFE068 /* TestTarget.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,8 @@
 		D3866BF808BC96D8007B2828 /* CSShading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSShading.m; sourceTree = "<group>"; };
 		D3866CC208BCD411007B2828 /* CSColorSpace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSColorSpace.m; sourceTree = "<group>"; };
 		D3866D0108BCE213007B2828 /* CSColorSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSColorSpace.h; sourceTree = "<group>"; };
+		D39153AB1119949E00DFE068 /* TestTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTarget.h; sourceTree = "<group>"; };
+		D39153AC1119949E00DFE068 /* TestTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTarget.m; sourceTree = "<group>"; };
 		D3E7BFDD08CA58CB0096F2A0 /* CSIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSIcon.h; sourceTree = "<group>"; };
 		D3E7BFDE08CA58CB0096F2A0 /* CSIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSIcon.m; sourceTree = "<group>"; };
 		D3F2298C08BA476F00C629E0 /* CSIconViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSIconViewItem.h; sourceTree = "<group>"; };
@@ -188,6 +191,8 @@
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				D345ACD808C4F85A007F5E16 /* TestDataSource.h */,
 				D345ACD908C4F85A007F5E16 /* TestDataSource.m */,
+				D39153AB1119949E00DFE068 /* TestTarget.h */,
+				D39153AC1119949E00DFE068 /* TestTarget.m */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -326,6 +331,7 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				D345ACDA08C4F85A007F5E16 /* TestDataSource.m in Sources */,
+				D39153AD1119949E00DFE068 /* TestTarget.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

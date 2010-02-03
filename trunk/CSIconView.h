@@ -107,7 +107,7 @@ typedef enum {
   CSVerticalKeyboardMovement
 } CSKeyboardMovementDirection;
 
-@interface CSIconView : NSView
+@interface CSIconView : NSControl
 {
   NSSize                    maxDragImageSize;
   NSImage                   *dragImageFadeImage;
@@ -175,6 +175,9 @@ typedef enum {
   
   IBOutlet id		    dataSource;
   IBOutlet id               delegate;
+  
+  IBOutlet id               target;
+  SEL                       action;
   
   BOOL                      delegateSupportsDidBeginEditing;
   BOOL                      delegateSupportsTextDidChange;
@@ -253,8 +256,10 @@ typedef enum {
 - (NSString *)iconViewUniqueID;
 - (BOOL)handleSimpleDrag:(id <NSDraggingInfo>)sender;
 
-- (void)scrollToTop:(id)sender;
-- (void)scrollToBottom:(id)sender;
+- (IBAction)scrollToTop:(id)sender;
+- (IBAction)scrollToBottom:(id)sender;
+- (IBAction)editFocusedItem:(id)sender;
+- (IBAction)openFocusedItem:(id)sender;
 
 // Resets the keyboard movement state, so that the arrow keys work as expected
 - (void)resetKeyboardMovement;

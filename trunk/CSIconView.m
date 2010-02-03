@@ -379,6 +379,27 @@ static NSString * const kFont = @"kFont";
   [self registerDelegateNotifications];
 }
 
+- (id)target
+{
+  return target;
+}
+
+- (void)setTarget:(id)tgt
+{
+  // NO RETAIN
+  target = tgt;
+}
+
+- (SEL)action
+{
+  return action;
+}
+
+- (void)setAction:(SEL)act
+{
+  action = act;
+}
+
 - (void)viewWillMoveToWindow:(NSWindow *)aWindow
 {
   UNUSED (aWindow);
@@ -417,6 +438,7 @@ static NSString * const kFont = @"kFont";
 {
   UNUSED (aNotification);
   
+  [self setDrawsFocusRing:NO];
   [self setNeedsDisplay:YES];
 }
 
@@ -1380,6 +1402,12 @@ static NSString * const kFont = @"kFont";
       dragStartPoint = pos;
       draggedFromIcon = NO;
     }
+    
+    // Double clicks send a message to the target
+    if (foundItem && action && [event clickCount] == 2) {
+      [deselectOnMouseUp removeAllObjects];
+      [NSApp sendAction:action to:target from:self];
+    }
   }
 }
 
@@ -1473,6 +1501,71 @@ static NSString * const kFont = @"kFont";
 - (NSString *)iconViewUniqueID
 {
   return [NSString stringWithFormat:@"%d-%p", getpid(), self];
+}
+
+- (BOOL)startEditingItem:(CSIconViewItem *)item
+{
+  NSWindow *myWindow = [self window];
+  if (![myWindow makeFirstResponder:myWindow])
+    return NO;
+  
+  NSPoint itemPos = [item position];
+  NSSize itemSize = gridSize;
+  
+  isEditing = YES;
+  
+  if (allowsCustomSizes && ([item state]
+                            & kCSIVItemCustomSizeMask)) {
+    itemSize = [item customSize];
+  }
+  
+  NSRect frame = NSMakeRect (itemPos.x, itemPos.y,
+                             itemSize.width, itemSize.height);
+  NSRect textRect = [renderer textRectIfDrawnWithFrame:frame
+                                           textOnRight:([self labelPosition]
+                                                        == CSLabelPositionRight)];
+  NSTextView *fieldEditor = (NSTextView *)[myWindow fieldEditor:YES
+                                                      forObject:self];
+  NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] 
+                                    autorelease];
+  
+  [style setAlignment:NSCenterTextAlignment];
+  [fieldEditor setTypingAttributes:
+   [NSDictionary dictionaryWithObjectsAndKeys:
+    [self font], NSFontAttributeName,
+    style, NSParagraphStyleAttributeName,
+    nil]];
+  [fieldEditor setHorizontallyResizable:YES];
+  [fieldEditor setVerticallyResizable:YES];
+  [fieldEditor setString:[item title]];
+  [fieldEditor selectAll:self];
+  [fieldEditor setDelegate:self];
+  [fieldEditor setFrame:textRect];
+  [fieldEditor setMaxSize:NSMakeSize (NSWidth (textRect), 1e6)];
+  [fieldEditor sizeToFit];
+  [self addSubview:fieldEditor];
+  [myWindow makeFirstResponder:fieldEditor];
+  
+  NSRect fieldEditorFrame = [fieldEditor frame];
+  [fieldEditor setFrame:NSMakeRect (NSMinX (textRect)
+                                    + 0.5 * (NSWidth (textRect) 
+                                             - NSWidth (fieldEditorFrame)),
+                                    NSMinY (textRect),
+                                    NSWidth (fieldEditorFrame),
+                                    NSHeight (fieldEditorFrame))];
+  
+  fieldEditorFrame = [fieldEditor frame];
+  
+  keyboardFocusRect = fieldEditorFrame;
+  [self setKeyboardFocusRingNeedsDisplayInRect:keyboardFocusRect];
+  
+  frameBeforeEditing = [self frame];
+  [self setFrame:NSUnionRect(fieldEditorFrame, frameBeforeEditing)];
+  
+  editingItem = [item retain];
+  didEdit = NO;
+
+  return YES;
 }
 
 - (void)mouseDragged:(NSEvent *)event
@@ -1578,66 +1671,8 @@ static NSString * const kFont = @"kFont";
   }
   
   if (editOnMouseUp) {
-    if (!dragging) {
-      NSWindow *myWindow = [self window];
-      if ([myWindow makeFirstResponder:myWindow]) {
-        NSPoint itemPos = [editOnMouseUp position];
-        NSSize itemSize = gridSize;
-
-        isEditing = YES;
-        
-        if (allowsCustomSizes && ([editOnMouseUp state]
-                                  & kCSIVItemCustomSizeMask)) {
-          itemSize = [editOnMouseUp customSize];
-        }
-        
-        NSRect frame = NSMakeRect (itemPos.x, itemPos.y,
-                                   itemSize.width, itemSize.height);
-        NSRect textRect = [renderer textRectIfDrawnWithFrame:frame
-                                                 textOnRight:([self labelPosition]
-                                                              == CSLabelPositionRight)];
-        NSTextView *fieldEditor = (NSTextView *)[myWindow fieldEditor:YES
-                                                            forObject:self];
-        NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle alloc] init] 
-                                          autorelease];
-        
-        [style setAlignment:NSCenterTextAlignment];
-        [fieldEditor setTypingAttributes:
-          [NSDictionary dictionaryWithObjectsAndKeys:
-            [self font], NSFontAttributeName,
-            style, NSParagraphStyleAttributeName,
-           nil]];
-        [fieldEditor setHorizontallyResizable:YES];
-        [fieldEditor setVerticallyResizable:YES];
-        [fieldEditor setString:[editOnMouseUp title]];
-        [fieldEditor selectAll:self];
-        [fieldEditor setDelegate:self];
-        [fieldEditor setFrame:textRect];
-        [fieldEditor setMaxSize:NSMakeSize (NSWidth (textRect), 1e6)];
-        [fieldEditor sizeToFit];
-        [self addSubview:fieldEditor];
-        [myWindow makeFirstResponder:fieldEditor];
-        
-        NSRect fieldEditorFrame = [fieldEditor frame];
-        [fieldEditor setFrame:NSMakeRect (NSMinX (textRect)
-                                          + 0.5 * (NSWidth (textRect) 
-                                                   - NSWidth (fieldEditorFrame)),
-                                          NSMinY (textRect),
-                                          NSWidth (fieldEditorFrame),
-                                          NSHeight (fieldEditorFrame))];
-
-        fieldEditorFrame = [fieldEditor frame];
-        
-        keyboardFocusRect = fieldEditorFrame;
-        [self setKeyboardFocusRingNeedsDisplayInRect:keyboardFocusRect];
-
-        frameBeforeEditing = [self frame];
-        [self setFrame:NSUnionRect(fieldEditorFrame, frameBeforeEditing)];
-
-        editingItem = [editOnMouseUp retain];
-        didEdit = NO;
-      }
-    }
+    if (!dragging)
+      [self startEditingItem:editOnMouseUp];
     [editOnMouseUp release];
     editOnMouseUp = nil;
   }
@@ -2347,6 +2382,7 @@ static NSString * const kFont = @"kFont";
 
 - (BOOL)resignFirstResponder
 {
+  [self setDrawsFocusRing:NO];
   [self setNeedsDisplay:YES];
   return YES;
 }
@@ -2376,10 +2412,38 @@ static NSString * const kFont = @"kFont";
     } else if (ch == NSEndFunctionKey) {
       [self scrollToBottom:self];
       return YES;
+    } else if (ch == '\r' || ch == '\n') {
+      [self editFocusedItem:self];
+      return YES;
+    } else if (ch == ' ') {
+      [self openFocusedItem:self];
+      return YES;
     }
   }
   
   return [super performKeyEquivalent:evt];
+}
+
+- (IBAction)editFocusedItem:(id)sender
+{
+  UNUSED (sender);
+  
+  if (focusedItem) {
+    [self startEditingItem:focusedItem];
+  } else {
+    NSBeep ();
+  }
+}
+
+- (IBAction)openFocusedItem:(id)sender
+{
+  UNUSED (sender);
+  
+  if (focusedItem && action) {
+    [NSApp sendAction:action to:target from:self];
+  } else {
+    NSBeep ();
+  }
 }
 
 /* Given a collection and an edge, find the item we should select.
@@ -2559,6 +2623,7 @@ findItemInDirectionFromRect (CSRectQuadTree *quadTree,
   if (count) {
     if (count > 1) {
       nextItem = findItemAtEdge (selected, kBottommost);
+      [self resetKeyboardMovement];
     } else {
       NSRect rect = [self boundingRectOfItems:selected];
 
@@ -2664,6 +2729,7 @@ findItemInDirectionFromRect (CSRectQuadTree *quadTree,
   if (count) {
     if (count > 1) {
       nextItem = findItemAtEdge (selected, kTopmost);
+      [self resetKeyboardMovement];
     } else {
       NSRect rect = [self boundingRectOfItems:selected];
 
@@ -2769,6 +2835,7 @@ findItemInDirectionFromRect (CSRectQuadTree *quadTree,
   if (count) {
     if (count > 1) {
       nextItem = findItemAtEdge (selected, kLeftmost);
+      [self resetKeyboardMovement];
     } else {
       NSRect rect = [self boundingRectOfItems:selected];
 
@@ -2874,6 +2941,7 @@ findItemInDirectionFromRect (CSRectQuadTree *quadTree,
   if (count) {
     if (count > 1) {
       nextItem = findItemAtEdge (selected, kRightmost);
+      [self resetKeyboardMovement];
     } else {
       NSRect rect = [self boundingRectOfItems:selected];
 

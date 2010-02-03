@@ -27,16 +27,20 @@
 #import "TestDataSource.h"
 #import <CSIconView/CSIconView.h>
 
+#define UNUSED(x) ((void)(x))
+
 @implementation TestDataSource
 
 - (unsigned)numberOfItemsInIconView:(CSIconView *)view
 {
+  UNUSED (view);
   return 1000;
 }
 
 - (CSIconViewItem *)iconView:(CSIconView *)view
 		 itemAtIndex:(unsigned)index
 {
+  UNUSED (view);
   CSIcon *icon = [CSIcon iconWithContentsOfFile:@"/System/Library/CoreServices/"
                   @"CoreTypes.bundle/Contents/Resources/GenericFolderIcon.icns"];
   
@@ -83,11 +87,13 @@
 
 - (NSArray *)iconViewAcceptedPasteboardTypesForDrop:(CSIconView *)view
 {
+  UNUSED (view);
   return [NSArray array];
 }
 
 - (NSArray *)iconViewPasteboardTypesForDrag:(CSIconView *)view
 {
+  UNUSED (view);
   return [NSArray array];
 }
 
