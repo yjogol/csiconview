@@ -29,7 +29,7 @@
 static CSShading *currentShading;
 
 struct color {
-  float fraction, r, g, b, a;
+  CGFloat fraction, r, g, b, a;
 };
 
 struct color_array {
@@ -41,8 +41,8 @@ struct color_array {
 
 static void
 shadingFunction (void *info,
-		 const float *input,
-		 float *outputs)
+		 const CGFloat *input,
+		 CGFloat *outputs)
 {
   CSShading *shading = (CSShading *)info;
   
@@ -50,7 +50,7 @@ shadingFunction (void *info,
 }
 
 static void
-shadeFromColorArray (float input, float *outputs, void *colorArrayPtr)
+shadeFromColorArray (CGFloat input, CGFloat *outputs, void *colorArrayPtr)
 {
   struct color_array *colorArray = (struct color_array *)colorArrayPtr;
   struct color *last = &colorArray->colors[colorArray->count - 1];
@@ -67,10 +67,10 @@ shadeFromColorArray (float input, float *outputs, void *colorArrayPtr)
       outputs[3] = color1->a;
       return;
     } else if (color2->fraction >= input) {
-      float range = color2->fraction - color1->fraction;
-      float offset = color2->fraction - input;
-      float fraction = offset / range;
-      float ifraction = 1.0f - fraction;
+      CGFloat range = color2->fraction - color1->fraction;
+      CGFloat offset = color2->fraction - input;
+      CGFloat fraction = offset / range;
+      CGFloat ifraction = 1.0f - fraction;
       
       outputs[0] = color1->r * fraction + color2->r * ifraction;
       outputs[1] = color1->g * fraction + color2->g * ifraction;
@@ -187,8 +187,8 @@ generateColorArray (CSShadingColorArray *oldArray)
 			   function:(CSShadingCallback)func
 			    context:(void *)context
 {
-  static const float domain[2] = { 0.0f, 1.0f };
-  static const float range[8]
+  static const CGFloat domain[2] = { 0.0f, 1.0f };
+  static const CGFloat range[8]
     = { 0.0f, 1.0f,
 	0.0f, 1.0f,
 	0.0f, 1.0f,
@@ -240,8 +240,8 @@ generateColorArray (CSShadingColorArray *oldArray)
 			    function:(CSShadingCallback)func
 			     context:(void *)context
 {
-  static const float domain[2] = { 0.0f, 1.0f };
-  static const float range[8]
+  static const CGFloat domain[2] = { 0.0f, 1.0f };
+  static const CGFloat range[8]
     = { 0.0f, 1.0f,
       0.0f, 1.0f,
       0.0f, 1.0f,

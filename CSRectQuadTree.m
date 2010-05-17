@@ -33,7 +33,7 @@
 #if DEBUG_NODE_ZOMBIES
 # define CHECK_NODE(x) NSCAssert (x->used <= x->total, @"Oops!")
 #else
-# define CHECK_NODE(x) 0
+# define CHECK_NODE(x) (void)0
 #endif
 
 /* A quad tree is structured like this:
@@ -212,8 +212,9 @@ static int whichBox (NSRect larger, NSRect smaller)
       
       if (!node) {
 	[NSException raise:@"CSOutOfMemory"
-		    format:NSLocalizedString (@"Not enough memory.",
-					      @"Not enough memory.")];
+		    format:@"%@",
+          NSLocalizedString (@"Not enough memory.",
+                             @"Not enough memory.")];
       }
       
       head->parent = node;
@@ -299,8 +300,9 @@ static int whichBox (NSRect larger, NSRect smaller)
   
   if (!node) {
     [NSException raise:@"CSOutOfMemory"
-		format:NSLocalizedString (@"Not enough memory.",
-					  @"Not enough memory.")];
+		format:@"%@",
+      NSLocalizedString (@"Not enough memory.",
+                         @"Not enough memory.")];
   }
 }
 

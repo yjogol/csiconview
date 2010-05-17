@@ -27,9 +27,9 @@
 #import <Cocoa/Cocoa.h>
 #import "CSColorSpace.h"
 
-typedef void (*CSShadingCallback)(float input,
-				  float *outputs,
-				  void  *context);
+typedef void (*CSShadingCallback)(CGFloat input,
+				  CGFloat *outputs,
+				  void    *context);
 
 enum {
   CSShadingDefaultFlags = 0,

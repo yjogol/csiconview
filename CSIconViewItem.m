@@ -158,7 +158,7 @@
 - (void)setLabelColor:(NSColor *)newColor
 {
   if (labelColor != newColor) {
-    float L, a, b, alpha;
+    CGFloat L, a, b, alpha;
     
     NSColor *oldColor = labelColor;
     labelColor = [newColor retain];

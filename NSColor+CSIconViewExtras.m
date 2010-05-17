@@ -21,7 +21,7 @@ static CMWorldRef colorWorld = NULL;
 		format:@"ColorSync error %d", err];	\
 }
 
-- (void)getL:(float *)pL u:(float *)pu v:(float *)pv alpha:(float *)alpha
+- (void)getL:(CGFloat *)pL u:(CGFloat *)pu v:(CGFloat *)pv alpha:(CGFloat *)alpha
 {
   float rgb[6];
   float xyz[6];
@@ -30,7 +30,9 @@ static CMWorldRef colorWorld = NULL;
   CMFloatBitmap xyzFB = CMFloatBitmapMakeChunky(xyz, 2, 1, cmXYZData);
   CMFloatBitmap luvFB = CMFloatBitmapMakeChunky(luv, 1, 1, cmLuvData);
   
-  [self getRed:&rgb[0] green:&rgb[1] blue:&rgb[2] alpha:alpha];
+  CGFloat r, g, b;
+  [self getRed:&r green:&g blue:&b alpha:alpha];
+  rgb[0] = r; rgb[1] = g; rgb[2] = b;
   rgb[3] = rgb[4] = rgb[5] = 1.0;
   
   if (!colorWorld) {
@@ -57,7 +59,7 @@ static CMWorldRef colorWorld = NULL;
   *pv = luv[2];
 }
 
-- (void)getL:(float *)pL a:(float *)pa b:(float *)pb alpha:(float *)alpha
+- (void)getL:(CGFloat *)pL a:(CGFloat *)pa b:(CGFloat *)pb alpha:(CGFloat *)alpha
 {
   float rgb[6];
   float xyz[6];
@@ -66,7 +68,9 @@ static CMWorldRef colorWorld = NULL;
   CMFloatBitmap xyzFB = CMFloatBitmapMakeChunky(xyz, 2, 1, cmXYZData);
   CMFloatBitmap labFB = CMFloatBitmapMakeChunky(lab, 1, 1, cmLabData);
   
-  [self getRed:&rgb[0] green:&rgb[1] blue:&rgb[2] alpha:alpha];
+  CGFloat r, g, b;
+  [self getRed:&r green:&g blue:&b alpha:alpha];
+  rgb[0] = r; rgb[1] = g; rgb[2] = b;
   rgb[3] = rgb[4] = rgb[5] = 1.0;
   
   if (!colorWorld) {
@@ -88,24 +92,23 @@ static CMWorldRef colorWorld = NULL;
   CMNOERRORS (CMConvertXYZFloatBitmap (&xyzFB, &xyz[3], &labFB, NULL, 
                                        cmUseDefaultChromaticAdaptation));
   
-  NSLog (@"%f,%f,%f => %f,%f,%f => %f,%f,%f\n",
-         rgb[0], rgb[1], rgb[2],
-         xyz[0], xyz[1], xyz[2],
-         lab[0], lab[1], lab[2]);
-  
   *pL = lab[0];
   *pa = lab[1];
   *pb = lab[2];
 }
 
-- (void)getX:(float *)pX Y:(float *)pY Z:(float *)pZ alpha:(float *)alpha
+- (void)getX:(CGFloat *)pX Y:(CGFloat *)pY Z:(CGFloat *)pZ alpha:(CGFloat *)alpha
 {
   float rgb[3];
   float xyz[3];
   CMFloatBitmap rgbFB = CMFloatBitmapMakeChunky(rgb, 1, 1, cmRGBData);
   CMFloatBitmap xyzFB = CMFloatBitmapMakeChunky(xyz, 1, 1, cmXYZData);
   
-  [self getRed:&rgb[0] green:&rgb[1] blue:&rgb[2] alpha:alpha];
+  CGFloat r, g, b;
+  [self getRed:&r green:&g blue:&b alpha:alpha];
+  rgb[0] = r;
+  rgb[1] = g;
+  rgb[2] = b;
   
   if (!colorWorld) {
     CMProfileRef xyzProfile, rgbProfile;
