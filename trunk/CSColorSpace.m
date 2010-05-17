@@ -74,10 +74,7 @@ extern CFStringRef kCGColorSpaceGenericCMYK __attribute__((weak_import));
 {
   CFStringRef name;
   
-  if (kCGColorSpaceGenericRGB)
-    name = kCGColorSpaceGenericRGB;
-  else
-    name = kCGColorSpaceUserRGB;
+  name = kCGColorSpaceGenericRGB;
   
   return [[[self alloc] initWithColorSpaceName:(NSString *)name]
     autorelease];
@@ -87,10 +84,7 @@ extern CFStringRef kCGColorSpaceGenericCMYK __attribute__((weak_import));
 {
   CFStringRef name;
   
-  if (kCGColorSpaceGenericCMYK)
-    name = kCGColorSpaceGenericCMYK;
-  else
-    name = kCGColorSpaceUserCMYK;
+  name = kCGColorSpaceGenericCMYK;
   
   return [[[self alloc] initWithColorSpaceName:(NSString *)name]
     autorelease];
@@ -100,10 +94,7 @@ extern CFStringRef kCGColorSpaceGenericCMYK __attribute__((weak_import));
 {
   CFStringRef name;
   
-  if (kCGColorSpaceGenericGray)
-    name = kCGColorSpaceGenericGray;
-  else
-    name = kCGColorSpaceUserGray;
+  name = kCGColorSpaceGenericGray;
   
   return [[[self alloc] initWithColorSpaceName:(NSString *)name]
     autorelease];

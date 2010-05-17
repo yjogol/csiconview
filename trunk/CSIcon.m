@@ -275,7 +275,8 @@ static NSMutableDictionary *namedIcons;
 - (void)setImagesFromIconFamilyResource:(const IconFamilyResource *)resource
 {
   NSImage *baseImage = [[[NSImage alloc] init] autorelease];
-  OSType sizes[6][4] = {
+  OSType sizes[7][4] = {
+    { kIconServices512PixelDataARGB, 0, 0, 0 },
     { kIconServices256PixelDataARGB, 0, 0, 0 },
     { kThumbnail32BitData, 0, 0, 0 },
     { kHuge32BitData, kHuge8BitData, kHuge4BitData, kHuge1BitMask }, 
@@ -527,12 +528,20 @@ imageRepFromData (Size containerSize,
   unsigned char *output;
   
   switch (dataType) {
+    case kIconServices512PixelDataARGB:
+      mask = NULL;
+      maskDepth = 0;
+      imageDepth = 32;
+      width = height = 512;
+      return [NSBitmapImageRep imageRepWithData:[NSData dataWithBytes:data
+                                                               length:dataSize]];
     case kIconServices256PixelDataARGB:
       mask = NULL;
       maskDepth = 0;
       imageDepth = 32;
       width = height = 256;
-      break;
+      return [NSBitmapImageRep imageRepWithData:[NSData dataWithBytes:data
+                                                               length:dataSize]];
     case kThumbnail32BitData:
       mask = dataForElement (containerSize, firstElement, kThumbnail8BitMask);
       maskDepth = 8;
@@ -692,6 +701,8 @@ convert1BitImageWithMask (unsigned char *output,
 {
   unsigned x, y;
   
+  (void)data;
+  
   for (y = 0; y < height; ++y) {
     unsigned char *row = output + y * ((width + 7) / 8);
     const unsigned char *maskRow = mask + y * ((width + 7) / 8);
@@ -726,6 +737,8 @@ convert4BitImageWithMask (unsigned char *output,
     { 0xc0, 0xc0, 0xc0 }, { 0x80, 0x80, 0x80 }, { 0x40, 0x40, 0x40 },
     { 0x00, 0x00, 0x00 }
   };
+  
+  (void)data;
   
   for (y = 0; y < height; ++y) {
     unsigned char *row = output + y * ((width + 1) / 2);
@@ -851,6 +864,8 @@ convert8BitImageWithMask (unsigned char *output,
     { 0x00, 0x00, 0x00 }
   };
   
+  (void)data;
+  
   for (y = 0; y < height; ++y) {
     unsigned char *row = output + y * width;
     const unsigned char *maskRow;
@@ -917,7 +932,7 @@ convert24BitImageWithMask (unsigned char *output,
 			   unsigned maskDepth,
 			   unsigned dataLen)
 {
-  unsigned char *buffer;
+  unsigned char *buffer = NULL;
   unsigned x, y;
 
   /* Check for compressed data, and decompress it */

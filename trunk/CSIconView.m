@@ -1098,7 +1098,7 @@ static NSString * const kFont = @"kFont";
       }
     }
   } else if ([deselItems isKindOfClass:[NSIndexSet class]]) {
-    unsigned ndx;
+    NSUInteger ndx;
 
     for (ndx = [deselItems firstIndex]; ndx != NSNotFound; 
          ndx = [deselItems indexGreaterThanIndex:ndx]) {
@@ -1185,7 +1185,7 @@ static NSString * const kFont = @"kFont";
       }
     }
   } else if ([newItems isKindOfClass:[NSIndexSet class]]) {
-    unsigned ndx;
+    NSUInteger ndx;
 
     for (ndx = [newItems firstIndex]; ndx != NSNotFound; 
          ndx = [newItems indexGreaterThanIndex:ndx]) {
@@ -1827,7 +1827,7 @@ static NSString * const kFont = @"kFont";
     draggingSourceMask = mask;
 }
 
-- (unsigned)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
 {
   if (isLocal)
     return localDraggingSourceMask;
@@ -1969,7 +1969,7 @@ static NSString * const kFont = @"kFont";
                                 location.y - origLocation.y);
   NSRect newSelectedItemRect = NSOffsetRect (selectedItemRect,
                                              offset.x, offset.y);
-  unsigned ndx;
+  NSUInteger ndx;
   NSPoint globalOffset = NSZeroPoint;
   
   for (ndx = [indices firstIndex]; ndx != NSNotFound;
@@ -2125,7 +2125,7 @@ static NSString * const kFont = @"kFont";
                                                size.width, size.height));
     }
   } else if ([collection isKindOfClass:[NSIndexSet class]]) {
-    unsigned ndx;
+    NSUInteger ndx;
     
     for (ndx = [collection firstIndex]; ndx != NSNotFound;
          ndx = [collection indexGreaterThanIndex:ndx]) {
@@ -2467,7 +2467,7 @@ typedef enum {
 static CSIconViewItem *
 findItemAtEdge (id collection, RelativePosition pos)
 {
-  NSPoint bestPos;
+  NSPoint bestPos = NSZeroPoint;
   CSIconViewItem *bestItem = nil;
   NSEnumerator *itemEnum = [collection objectEnumerator];
   CSIconViewItem *item;
@@ -2478,7 +2478,7 @@ findItemAtEdge (id collection, RelativePosition pos)
       bestPos = [item position];
     } else {
       NSPoint itemPos = [item position];
-      BOOL isBest;
+      BOOL isBest = NO;
       
       switch (pos) {
       case kTopmost:
@@ -2542,7 +2542,7 @@ findItemInDirectionFromRect (CSRectQuadTree *quadTree,
   NSSet *possibleItems = [quadTree objectsIntersectingRect:rect];
   NSEnumerator *itemEnum = [possibleItems objectEnumerator];
   CSIconViewItem *bestItem = nil, *item;
-  NSPoint bestPos;
+  NSPoint bestPos = NSZeroPoint;
   
   /* Find the item closest to being next to the selected item.  We break
      ties in the upward/leftward direction. */
@@ -2577,7 +2577,7 @@ findItemInDirectionFromRect (CSRectQuadTree *quadTree,
       bestPos = itemPos;
       bestItem = item;
     } else {
-      BOOL isBest;
+      BOOL isBest = NO;
       
       switch (direction) {
       case kUp:

@@ -10,9 +10,9 @@
 
 @interface NSColor (CSIconViewExtras) 
 
-- (void)getL:(float *)pL u:(float *)pu v:(float *)pv alpha:(float *)alpha;
-- (void)getL:(float *)pL a:(float *)pa b:(float *)pb alpha:(float *)alpha;
-- (void)getX:(float *)X Y:(float *)Y Z:(float *)Z alpha:(float *)alpha;
+- (void)getL:(CGFloat *)pL u:(CGFloat *)pu v:(CGFloat *)pv alpha:(CGFloat *)alpha;
+- (void)getL:(CGFloat *)pL a:(CGFloat *)pa b:(CGFloat *)pb alpha:(CGFloat *)alpha;
+- (void)getX:(CGFloat *)X Y:(CGFloat *)Y Z:(CGFloat *)Z alpha:(CGFloat *)alpha;
 
 @end
 

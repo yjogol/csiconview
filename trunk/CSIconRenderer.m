@@ -348,7 +348,7 @@
     NSRange glyphRange;
     NSRect lineRect;
     NSRange realRange;
-    float fraction;
+    CGFloat fraction;
     unsigned character;
     const unichar ellipsis = 0x2026;
     NSString *ellipsisString = [NSString stringWithCharacters:&ellipsis
@@ -408,7 +408,7 @@
       unichar ch = [[textStorage string] characterAtIndex:characterIndex];
       
       if (ch == ' ') {
-	unsigned rectCount = 0;
+	NSUInteger rectCount = 0;
 	NSRectArray rectArray
 	  = [layoutManager rectArrayForGlyphRange:
 	    NSMakeRange (glyphRange.location + glyphRange.length - 1, 1)
@@ -441,8 +441,8 @@
 {
   NSSize currentSize = [textContainer containerSize];
   NSRectArray rects;
-  unsigned rectCount, n;
-  float height = 0.0;
+  NSUInteger rectCount, n;
+  CGFloat height = 0.0;
   
   if (currentSize.height != rect.size.height
       || currentSize.width != rect.size.width) {
@@ -595,7 +595,7 @@
 	      operation:NSCompositeSourceOver fraction:1.0]; 
     } else {
       NSBezierPath *path = [NSBezierPath bezierPath];
-      float dash[2] = { 5.0, 2.0 };
+      CGFloat dash[2] = { 5.0, 2.0 };
       
       if (highlighted)
 	[[[NSColor secondarySelectedControlColor]
@@ -619,7 +619,7 @@
 	      operation:NSCompositeSourceOver fraction:0.5];
     } else {
       NSBezierPath *path = [NSBezierPath bezierPath];
-      float dash[2] = { 5.0, 2.0 };
+      CGFloat dash[2] = { 5.0, 2.0 };
       
       [[[NSColor secondarySelectedControlColor] colorWithAlphaComponent:0.5]
 	set];

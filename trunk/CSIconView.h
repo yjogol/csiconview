@@ -107,7 +107,7 @@ typedef enum {
   CSVerticalKeyboardMovement
 } CSKeyboardMovementDirection;
 
-@interface CSIconView : NSControl
+@interface CSIconView : NSControl <NSTextViewDelegate>
 {
   NSSize                    maxDragImageSize;
   NSImage                   *dragImageFadeImage;
@@ -129,8 +129,8 @@ typedef enum {
   CSIconViewItem            *editingItem;
   NSRect                    keyboardFocusRect;
   
-  unsigned                  localDraggingSourceMask;
-  unsigned                  draggingSourceMask;
+  NSUInteger                localDraggingSourceMask;
+  NSUInteger                draggingSourceMask;
 
   NSMutableArray	    *items;
   CSRectQuadTree	    *quadTree;
