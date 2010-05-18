@@ -227,6 +227,7 @@ typedef enum {
 
 - (NSSet *)itemsInRect:(NSRect)rect;
 
+- (void)reloadItemAtIndex:(unsigned)ndx;
 - (void)reloadItems;
 - (void)arrangeItems;
 

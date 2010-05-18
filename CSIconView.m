@@ -913,6 +913,56 @@ static NSString * const kFont = @"kFont";
   return items;
 }
 
+- (void)reloadItemAtIndex:(unsigned)ndx
+{
+  CSIconViewItem *currentItem = [items objectAtIndex:ndx];
+  NSPoint itemPos = [currentItem position];
+  CSIconViewItem *newItem = [dataSource iconView:self itemAtIndex:ndx];
+  NSSize itemSize;
+  NSRect itemRect;
+  unsigned itemState = [currentItem state];
+  
+  if (itemState & kCSIVItemCustomSizeMask)
+    itemSize = [currentItem customSize];
+  else
+    itemSize = gridSize;
+  
+  itemRect = NSMakeRect (itemPos.x, itemPos.y,
+                         itemSize.width, itemSize.height);
+  
+  [self setNeedsDisplayInRect:NSInsetRect (itemRect, -2.0, -2.0)];
+  
+  if (isEditing)
+    [[self window] makeFirstResponder:self];
+  
+  if (currentItem != newItem) {
+    if ([selectedItems containsObject:currentItem]) {
+      [selectedItems removeObject:currentItem];
+      [selectedItems addObject:newItem];
+      [newItem setState:[newItem state] | kCSIVItemSelectedMask];
+    }
+    [newItem setPosition:itemPos];
+    if (focusedItem == currentItem)
+      [self setFocusedItem:newItem];
+    [items replaceObjectAtIndex:ndx withObject:newItem];
+  }
+  
+  if ([self autoArrangesItems])
+    [self setNeedsArrange:YES];
+  
+  itemPos = [newItem position];
+  
+  if (itemState & kCSIVItemCustomSizeMask)
+    itemSize = [newItem customSize];
+  else
+    itemSize = gridSize;
+  
+  itemRect = NSMakeRect (itemPos.x, itemPos.y,
+                         itemSize.width, itemSize.height);
+  
+  [self setNeedsDisplayInRect:NSInsetRect (itemRect, -2.0, -2.0)];
+}
+
 - (void)reloadItems
 {
   unsigned n, count = [dataSource numberOfItemsInIconView:self];
